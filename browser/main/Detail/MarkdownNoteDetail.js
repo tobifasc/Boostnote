@@ -6,6 +6,7 @@ import MarkdownEditor from 'browser/components/MarkdownEditor'
 import MarkdownSplitEditor from 'browser/components/MarkdownSplitEditor'
 import TodoListPercentage from 'browser/components/TodoListPercentage'
 import StarButton from './StarButton'
+import SaveButton from './SaveButton'
 import TagSelect from './TagSelect'
 import FolderSelect from './FolderSelect'
 import dataApi from 'browser/main/lib/dataApi'
@@ -124,7 +125,8 @@ class MarkdownNoteDetail extends React.Component {
   updateNote (note) {
     note.updatedAt = new Date()
     this.setState({note}, () => {
-      this.save()
+      // TODO only if not auto-save
+      // this.save()
     })
   }
 
@@ -193,6 +195,14 @@ class MarkdownNoteDetail extends React.Component {
     this.setState({
       note
     }, () => {
+      this.save()
+    })
+  }
+
+  handleSaveButtonClick (e) {
+    const { note } = this.state
+
+    this.setState({note}, () => {
       this.save()
     })
   }
@@ -473,6 +483,9 @@ class MarkdownNoteDetail extends React.Component {
       <div styleName='info-right'>
         <ToggleModeButton onClick={(e) => this.handleSwitchMode(e)} editorType={editorType} />
 
+        <SaveButton
+          onClick={(e) => this.handleSaveButtonClick(e)}
+        />
         <StarButton
           onClick={(e) => this.handleStarButtonClick(e)}
           isActive={note.isStarred}
