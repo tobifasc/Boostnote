@@ -125,12 +125,14 @@ class MarkdownNoteDetail extends React.Component {
   updateNote (note) {
     note.updatedAt = new Date()
     this.setState({note}, () => {
-      // TODO only if not auto-save
-      // this.save()
+      if (this.props.config.editor.autosave) {
+        this.save()
+      }
     })
   }
 
   save () {
+    console.log('saving now')
     clearTimeout(this.saveQueue)
     this.saveQueue = setTimeout(() => {
       this.saveNow()
@@ -483,9 +485,16 @@ class MarkdownNoteDetail extends React.Component {
       <div styleName='info-right'>
         <ToggleModeButton onClick={(e) => this.handleSwitchMode(e)} editorType={editorType} />
 
-        <SaveButton
-          onClick={(e) => this.handleSaveButtonClick(e)}
-        />
+        {(() => {
+          const saveButtonComponent = <SaveButton
+            onClick={(e) => this.handleSaveButtonClick(e)}
+          />
+
+          return (
+              config.editor.autosave ? '' : saveButtonComponent
+          )
+        })()}
+
         <StarButton
           onClick={(e) => this.handleStarButtonClick(e)}
           isActive={note.isStarred}
